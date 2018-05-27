@@ -146,7 +146,7 @@ fn post_nth_prime(request: &mut Request) -> IronResult<Response> {
         Err(_) => {
             response.set_mut(status::BadRequest);
             response.set_mut("application/json".parse::<Mime>().unwrap());
-            response.set_mut(format!(r#"{{"status":"error", "message":"Value for 'n' parameter not a number: {:?}"}}"#, unparsed_numbers[0]));
+            response.set_mut(format!(r#"{{"status":"error", "message":"Value for 'n' parameter not a number: {}"}}"#, unparsed_numbers[0]));
             return Ok(response);
         }
         Ok(x) => x
