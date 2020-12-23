@@ -92,6 +92,7 @@ fn main() {
 }
 
 fn get_root(_request: &mut Request) -> IronResult<Response> {
+    println!("get_root");
     let mut response = Response::new();
 
     response.set_mut(status::Ok);
