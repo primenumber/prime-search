@@ -100,10 +100,12 @@ fn get_root(_request: &mut Request) -> IronResult<Response> {
         <!doctype html>
         <head>
             <title>Prime Search</title>
+            <base href="/prime-search/" />
         </head>
         <body>
-            <form action="/nth_prime" method="post">
-                <input type="number" name="n">
+            <form action="nth_prime" method="post">
+                <lebel>n: <input type="number" name="n"></label>
+                <input type="submit" value="番目の素数を求める">
             </form>
         </body>
     "#);
