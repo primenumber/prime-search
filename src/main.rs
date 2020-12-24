@@ -102,7 +102,6 @@ fn get_root(_request: &mut Request) -> IronResult<Response> {
         <!doctype html>
         <head>
             <title>Prime Search</title>
-            <base href="/prime-search/" />
         </head>
         <body>
             <form action="nth_prime" method="post">
