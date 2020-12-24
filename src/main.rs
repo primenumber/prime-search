@@ -87,8 +87,9 @@ fn main() {
     router.get("/", get_root, "root");
     router.post("/nth_prime", post_nth_prime, "nth_prime");
 
-    println!("Serving on http://localhost:3210...");
-    Iron::new(router).http("localhost:3210").unwrap();
+    let port = 3210;
+    println!("Serving on http://localhost:{}...", port);
+    Iron::new(router).http(format!("localhost:{}", port)).unwrap();
 }
 
 fn get_root(_request: &mut Request) -> IronResult<Response> {
