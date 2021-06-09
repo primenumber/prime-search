@@ -1,12 +1,16 @@
 extern crate iron;
 extern crate router;
+extern crate staticfile;
 #[macro_use] extern crate lazy_static;
 extern crate urlencoded;
 
 use iron::prelude::*;
 use iron::status;
+use staticfile::Static;
 use router::Router;
+use mount::Mount;
 use std::str::FromStr;
+use std::path::Path;
 use urlencoded::UrlEncodedBody;
 use iron::mime::Mime;
 use std::fs::File;
@@ -15,8 +19,8 @@ use std::io::{BufReader, BufRead};
 const SQRTN: usize = 4096;
 const N: usize = SQRTN * SQRTN;
 lazy_static! {
-    pub static ref PRIME_LIST: Vec<usize> = prime_list();
-    pub static ref COUNT: Vec<usize> = {
+    static ref PRIME_LIST: Vec<usize> = prime_list();
+    static ref COUNT: Vec<usize> = {
         let mut res = Vec::new();
         let f = File::open("table").expect("table not found");
         for line in BufReader::new(f).lines() {
@@ -24,7 +28,7 @@ lazy_static! {
         }
         res
     };
-    pub static ref PARTIAL_SUM: Vec<usize> = {
+    static ref PARTIAL_SUM: Vec<usize> = {
         let m = COUNT.len();
         let mut res = vec![0; m+1];
         for i in 0usize..m {
@@ -78,40 +82,27 @@ fn prime_list_range(begin: usize, size: usize) -> Vec<usize> {
                                            }).collect()
 }
 
-
 fn main() {
     println!("number of primes under n is: {}", PRIME_LIST.len());
+    println!("100000th prime is: {}", nth_prime(1000000));
 
     let mut router = Router::new();
 
-    router.get("/", get_root, "root");
     router.post("/nth_prime", post_nth_prime, "nth_prime");
+
+    let mut mount = Mount::new();
+    mount.mount("/", Static::new(Path::new("static/")));
+    mount.mount("/api/", router);
+
+    //fn handler(req: &mut Request) -> IronResult<Response> {
+    //  println!("OK: {}", req.url);
+    //  Ok(Response::new())
+    //}
+    //router.get("/:query", handler, "handler");
 
     let port = 3210;
     println!("Serving on http://localhost:{}...", port);
-    Iron::new(router).http(format!("localhost:{}", port)).unwrap();
-}
-
-fn get_root(_request: &mut Request) -> IronResult<Response> {
-    println!("get_root");
-    let mut response = Response::new();
-
-    response.set_mut(status::Ok);
-    response.set_mut("text/html; Charset=UTF8".parse::<Mime>().unwrap());
-    response.set_mut(r#"
-        <!doctype html>
-        <head>
-            <title>Prime Search</title>
-        </head>
-        <body>
-            <form action="nth_prime" method="post">
-                <lebel>n: <input type="number" name="n"></label>
-                <input type="submit" value="番目の素数を求める">
-            </form>
-        </body>
-    "#);
-
-    Ok(response)
+    Iron::new(mount).http(format!("localhost:{}", port)).unwrap();
 }
 
 fn post_nth_prime(request: &mut Request) -> IronResult<Response> {

@@ -3,3 +3,4 @@ services:
   prime-search:
     build: .
     network_mode: "host"
+    restart: always
