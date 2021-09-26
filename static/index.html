@@ -1,10 +1,16 @@
 <!doctype html>
+<html>
 <head>
-<title>Prime Search</title>
+<meta charset="utf-8">
+<title>Prime Search | poyo.me</title>
+<meta name="description" content="N番目の素数や、N以下の素数の個数を求めます">
 </head>
 <body>
 <label>n: <input type="number" id="n"></label>
-<input onclick="get_nth_prime()" type="submit" value="番目の素数を求める">   
+<input onclick="get_nth_prime()" type="submit" value="番目の素数を求める">
+<input onclick="count_primes()" type="submit" value="以下の素数の個数を求める">
 <p>結果: <span id="result"></span></p>
+<p>140737488355328未満の素数に関して答えられます</p>
 <script src="app.js"></script>
 </body>
+</html>
